@@ -1,0 +1,7 @@
+{
+  "name": "Invoicify Pro",
+  "description": "AI-powered invoice extraction and expense management tool designed for SMEs to automate bookkeeping and gain financial insights.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
