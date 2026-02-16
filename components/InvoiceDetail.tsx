@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ChevronLeft, Download, Printer, Edit3, Trash2, Calendar, FileText, Tag, ExternalLink, Building2, UserCircle, MapPin, CreditCard, FileJson, Layout, Wallet, Cpu, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, Download, Printer, Edit3, Trash2, Calendar, FileText, Tag, ExternalLink, Building2, UserCircle, MapPin, CreditCard, FileJson, Layout, Wallet, Cpu, CheckCircle2, List } from 'lucide-react';
 import { InvoiceData } from '../types';
 
 interface InvoiceDetailProps {
@@ -37,7 +37,7 @@ const convertToThaiBaht = (amount: number): string => {
 };
 
 const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit }) => {
-  const [activeView, setActiveView] = useState<'document' | 'json'>('document');
+  const [activeView, setActiveView] = useState<'document' | 'json' | 'summary'>('document');
 
   const getStatusStyle = (status: string) => {
     switch(status) {
@@ -46,6 +46,27 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit 
       default: return 'bg-amber-500 text-white shadow-lg shadow-amber-200';
     }
   };
+
+  const summaryRows = [
+    { label: 'เลขที่เอกสาร (Invoice Number)', value: invoice.invoice.invoiceNumber },
+    { label: 'วันที่ (Date)', value: invoice.invoice.date },
+    { label: 'วันครบกำหนด (Due Date)', value: invoice.invoice.dueDate || '-' },
+    { label: 'ประเภทเอกสาร (Document Type)', value: invoice.invoice.isReceipt ? 'ใบกำกับภาษี/ใบเสร็จรับเงิน' : 'ใบกำกับภาษี' },
+    { label: 'ชื่อผู้ขาย (Seller Name)', value: invoice.seller.name },
+    { label: 'เลขประจำตัวผู้เสียภาษีผู้ขาย (Seller Tax ID)', value: invoice.seller.taxId || '-' },
+    { label: 'สาขาผู้ขาย (Seller Branch)', value: invoice.seller.branch || '-' },
+    { label: 'ที่อยู่ผู้ขาย (Seller Address)', value: invoice.seller.address || '-' },
+    { label: 'ชื่อผู้ซื้อ (Customer Name)', value: invoice.customer.name || '-' },
+    { label: 'เลขประจำตัวผู้เสียภาษีผู้ซื้อ (Customer Tax ID)', value: invoice.customer.taxId || '-' },
+    { label: 'สาขาผู้ซื้อ (Customer Branch)', value: invoice.customer.branch || '-' },
+    { label: 'ที่อยู่ผู้ซื้อ (Customer Address)', value: invoice.customer.address || '-' },
+    { label: 'หมวดหมู่ (Category)', value: invoice.invoice.category || '-' },
+    { label: 'สกุลเงิน (Currency)', value: invoice.invoice.currency },
+    { label: 'จำนวนเงินก่อนภาษี (Subtotal)', value: invoice.summary.subtotal?.toLocaleString() },
+    { label: 'ภาษีมูลค่าเพิ่ม (VAT 7%)', value: invoice.summary.taxAmount?.toLocaleString() },
+    { label: 'จำนวนเงินรวมทั้งสิ้น (Grand Total)', value: invoice.summary.totalAmount?.toLocaleString() },
+    { label: 'สถานะ (Status)', value: invoice.invoice.status },
+  ];
 
   return (
     <div className="animate-in fade-in slide-in-from-right-4 duration-500 pb-20 space-y-10">
@@ -59,17 +80,24 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit 
             <ChevronLeft className="w-6 h-6" />
           </button>
           
-          <div className="flex bg-white p-2 rounded-2xl border border-slate-200 shadow-sm">
+          <div className="flex bg-white p-2 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
             <button 
               onClick={() => setActiveView('document')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black transition-all ${activeView === 'document' ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-100' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black transition-all whitespace-nowrap ${activeView === 'document' ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-100' : 'text-slate-400 hover:text-slate-600'}`}
             >
               <Layout className="w-4 h-4" />
               DOCUMENT VIEW
             </button>
             <button 
+              onClick={() => setActiveView('summary')}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black transition-all whitespace-nowrap ${activeView === 'summary' ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-100' : 'text-slate-400 hover:text-slate-600'}`}
+            >
+              <List className="w-4 h-4" />
+              FIELD SUMMARY
+            </button>
+            <button 
               onClick={() => setActiveView('json')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black transition-all ${activeView === 'json' ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-100' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black transition-all whitespace-nowrap ${activeView === 'json' ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-100' : 'text-slate-400 hover:text-slate-600'}`}
             >
               <FileJson className="w-4 h-4" />
               JSON DATA
@@ -141,7 +169,6 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit 
                 <div className="p-12 space-y-12 flex-1">
                   {/* Parties Information Boxes */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    {/* Box 1: Seller */}
                     <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
                       <h4 className="text-[10px] font-black text-indigo-500 uppercase tracking-widest flex items-center gap-3">
                         <Building2 className="w-5 h-5" /> ข้อมูลผู้ขาย (SELLER)
@@ -165,7 +192,6 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit 
                       </div>
                     </div>
 
-                    {/* Box 2: Customer */}
                     <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
                       <h4 className="text-[10px] font-black text-indigo-500 uppercase tracking-widest flex items-center gap-3">
                         <UserCircle className="w-5 h-5" /> ข้อมูลผู้ซื้อ (BUYER)
@@ -190,7 +216,7 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit 
                     </div>
                   </div>
 
-                  {/* Box 3: Item List Table */}
+                  {/* Item List Table */}
                   <div className="bg-slate-50 p-1 rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-inner">
                     <table className="w-full text-left">
                       <thead>
@@ -228,7 +254,7 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit 
                     </table>
                   </div>
 
-                  {/* Financial Summary Block */}
+                  {/* Summary Block */}
                   <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-end">
                     <div className="bg-indigo-50 border border-indigo-100 p-8 rounded-[2.5rem] shadow-sm">
                       <p className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-3">จำนวนเงินรวม (ตัวอักษร)</p>
@@ -250,6 +276,36 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit 
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+            ) : activeView === 'summary' ? (
+              <div className="p-12 h-full flex flex-col space-y-8">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">สรุปรายละเอียดเขตข้อมูล</h3>
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Extracted Field Summary Table</p>
+                  </div>
+                </div>
+                
+                <div className="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm">
+                  <table className="w-full text-left">
+                    <thead className="bg-slate-50 border-b border-slate-200">
+                      <tr>
+                        <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center w-20">No.</th>
+                        <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest w-64">Label</th>
+                        <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {summaryRows.map((row, i) => (
+                        <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                          <td className="px-8 py-4 text-xs font-black text-slate-300 text-center">{i + 1}</td>
+                          <td className="px-8 py-4 text-xs font-black text-slate-500 uppercase tracking-tight">{row.label}</td>
+                          <td className="px-8 py-4 text-sm font-bold text-slate-900">{row.value}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             ) : (
@@ -278,7 +334,7 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit 
             )}
             
             {/* Box 4 Footer: API Costs */}
-            <div className="p-12 bg-slate-50 border-t border-slate-100">
+            <div className="p-12 bg-slate-50 border-t border-slate-100 mt-auto">
               <div className="flex flex-col md:flex-row items-center justify-between gap-8">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-400">
