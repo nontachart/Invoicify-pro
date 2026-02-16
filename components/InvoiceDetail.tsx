@@ -68,6 +68,8 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit 
     { label: 'สถานะ (Status)', value: invoice.invoice.status },
   ];
 
+  const isPdf = invoice.invoice.imageUrl?.startsWith('data:application/pdf');
+
   return (
     <div className="animate-in fade-in slide-in-from-right-4 duration-500 pb-20 space-y-10">
       {/* Header Actions */}
@@ -384,18 +386,28 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit 
             </h4>
             <div className="bg-slate-900 rounded-[3rem] overflow-hidden shadow-2xl aspect-[3/4.2] flex items-center justify-center relative border-8 border-white group">
               {invoice.invoice.imageUrl ? (
-                <>
-                  <img 
-                    src={invoice.invoice.imageUrl} 
-                    alt="Invoice" 
-                    className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-700" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-end pb-12">
-                    <button className="bg-white text-slate-900 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-3 shadow-2xl">
-                      <ExternalLink className="w-4 h-4" /> View Full Image
-                    </button>
-                  </div>
-                </>
+                <div className="w-full h-full">
+                  {isPdf ? (
+                    <iframe 
+                      src={invoice.invoice.imageUrl} 
+                      className="w-full h-full" 
+                      title="PDF Source"
+                    />
+                  ) : (
+                    <>
+                      <img 
+                        src={invoice.invoice.imageUrl} 
+                        alt="Invoice" 
+                        className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-700" 
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-end pb-12">
+                        <button className="bg-white text-slate-900 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-3 shadow-2xl">
+                          <ExternalLink className="w-4 h-4" /> View Full Image
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
               ) : (
                 <div className="text-slate-700 flex flex-col items-center gap-6">
                   <FileText className="w-24 h-24 opacity-20" />

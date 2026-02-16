@@ -63,6 +63,8 @@ const ExtractionResult: React.FC<ExtractionResultProps> = ({ data, onSave, onCan
     setEditedData(prev => ({ ...prev, lineItems: newItems }));
   };
 
+  const isPdf = editedData.invoice.imageUrl?.startsWith('data:application/pdf');
+
   return (
     <div className="max-w-7xl mx-auto bg-slate-50 rounded-[2.5rem] border border-slate-200 shadow-2xl overflow-hidden flex flex-col md:flex-row h-[90vh]">
       {/* Verification Panel (Left) */}
@@ -372,8 +374,18 @@ const ExtractionResult: React.FC<ExtractionResultProps> = ({ data, onSave, onCan
       <div className="w-full md:w-2/5 lg:w-3/7 bg-slate-900 flex items-center justify-center p-8 relative">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-800 to-slate-900 opacity-50"></div>
         <div className="relative w-full h-full flex flex-col items-center justify-center gap-6">
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-4 rounded-[2rem] shadow-2xl max-h-[85vh] overflow-hidden group">
-            <img src={editedData.invoice.imageUrl} alt="Invoice source" className="max-h-full max-w-full object-contain rounded-2xl shadow-inner group-hover:scale-[1.02] transition-transform duration-500" />
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-4 rounded-[2rem] shadow-2xl w-full h-full overflow-hidden group">
+            {isPdf ? (
+              <iframe 
+                src={editedData.invoice.imageUrl} 
+                className="w-full h-full" 
+                title="PDF Source"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <img src={editedData.invoice.imageUrl} alt="Invoice source" className="max-h-full max-w-full object-contain rounded-2xl shadow-inner group-hover:scale-[1.02] transition-transform duration-500" />
+              </div>
+            )}
           </div>
           <div className="bg-white/10 backdrop-blur-md text-white/80 p-5 rounded-2xl text-[10px] border border-white/5 flex items-center gap-4 max-w-xs text-center font-medium leading-relaxed">
              <Info className="w-6 h-6 text-indigo-400 flex-shrink-0" />

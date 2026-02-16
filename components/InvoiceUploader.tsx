@@ -150,15 +150,18 @@ const InvoiceUploader: React.FC<InvoiceUploaderProps> = ({ onProcessed }) => {
           </div>
 
           <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-2">
-            {/* Image Preview */}
-            <div className="bg-slate-900 p-6 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-800">
+            {/* Document Preview */}
+            <div className="bg-slate-900 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-800 h-[500px]">
               {file?.type === 'application/pdf' ? (
-                <div className="flex flex-col items-center gap-4 text-slate-500">
-                  <FileText className="w-24 h-24" />
-                  <p className="font-medium text-xs truncate max-w-[150px] text-white">{file.name}</p>
-                </div>
+                <iframe 
+                  src={preview} 
+                  className="w-full h-full" 
+                  title="PDF Preview"
+                />
               ) : (
-                <img src={preview} alt="Invoice preview" className="max-h-[450px] object-contain rounded-lg shadow-2xl" />
+                <div className="p-6 w-full h-full flex items-center justify-center">
+                  <img src={preview} alt="Invoice preview" className="max-h-full max-w-full object-contain rounded-lg shadow-2xl" />
+                </div>
               )}
             </div>
 
