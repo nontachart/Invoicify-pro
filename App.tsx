@@ -6,6 +6,7 @@ import InvoiceUploader from './components/InvoiceUploader';
 import InvoiceTable from './components/InvoiceTable';
 import ExtractionResult from './components/ExtractionResult';
 import InvoiceDetail from './components/InvoiceDetail';
+import Login from './components/Login';
 import { InvoiceData } from './types';
 
 // Initial Mock Data updated to nested structure
@@ -66,10 +67,33 @@ const MOCK_INVOICES: InvoiceData[] = [
 ];
 
 const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<{ name: string; role: string } | null>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [invoices, setInvoices] = useState<InvoiceData[]>(MOCK_INVOICES);
   const [processingInvoice, setProcessingInvoice] = useState<InvoiceData | null>(null);
   const [viewingInvoice, setViewingInvoice] = useState<InvoiceData | null>(null);
+
+  // Check for existing session
+  useEffect(() => {
+    const savedUser = localStorage.getItem('invoicify_user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = (userData: { name: string; role: string }) => {
+    setUser(userData);
+    setIsAuthenticated(true);
+    localStorage.setItem('invoicify_user', JSON.stringify(userData));
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUser(null);
+    localStorage.removeItem('invoicify_user');
+  };
 
   const handleInvoiceProcessed = (data: InvoiceData) => {
     setProcessingInvoice(data);
@@ -101,8 +125,17 @@ const App: React.FC = () => {
     setViewingInvoice(null);
   };
 
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} />;
+  }
+
   return (
-    <Layout activeTab={activeTab} setActiveTab={setActiveTab}>
+    <Layout 
+      activeTab={activeTab} 
+      setActiveTab={setActiveTab}
+      onLogout={handleLogout}
+      user={user}
+    >
       {processingInvoice ? (
         <ExtractionResult 
           data={processingInvoice} 
