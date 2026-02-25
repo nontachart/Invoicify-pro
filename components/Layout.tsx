@@ -6,9 +6,11 @@ interface LayoutProps {
   children: React.ReactNode;
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  onLogout: () => void;
+  user: { name: string; role: string } | null;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) => {
+const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab, onLogout, user }) => {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const navItems = [
@@ -62,7 +64,10 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
           </nav>
 
           <div className="mt-auto border-t border-slate-100 pt-4">
-            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors">
+            <button 
+              onClick={onLogout}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors"
+            >
               <LogOut className="w-5 h-5" />
               Sign Out
             </button>
@@ -91,11 +96,11 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
             </button>
             <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-medium text-slate-900">John SME</p>
-                <p className="text-xs text-slate-500">Business Owner</p>
+                <p className="text-sm font-medium text-slate-900">{user?.name || 'User'}</p>
+                <p className="text-xs text-slate-500">{user?.role || 'Member'}</p>
               </div>
               <img 
-                src="https://picsum.photos/seed/user/100/100" 
+                src={`https://picsum.photos/seed/${user?.name || 'user'}/100/100`} 
                 alt="Avatar" 
                 className="w-10 h-10 rounded-full ring-2 ring-slate-100"
               />
