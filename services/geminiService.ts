@@ -134,7 +134,7 @@ export async function extractInvoiceData(base64Image: string, mimeType: string, 
         costUSD: Number(costUSD.toFixed(6))
       }
     };
-    
+    console.log("Extraction result:", finalResult);
     return finalResult;
   } catch (error) {
     console.error("Extraction error:", error);

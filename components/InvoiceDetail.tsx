@@ -196,7 +196,7 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit 
 
                     <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
                       <h4 className="text-[10px] font-black text-indigo-500 uppercase tracking-widest flex items-center gap-3">
-                        <UserCircle className="w-5 h-5" /> ข้อมูลผู้ซื้อ (BUYER)
+                        <UserCircle className="w-5 h-5" /> ข้อมูลผู้ซื้อ (CUSTOMER)
                       </h4>
                       <div className="space-y-4">
                         <p className="font-black text-slate-900 text-xl leading-tight">{invoice.customer.name || 'ทั่วไป'}</p>
@@ -245,7 +245,7 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit 
                                <p className="text-sm font-bold text-slate-600 font-mono">{item.unitPrice?.toLocaleString()}</p>
                             </td>
                             <td className="px-8 py-6 text-right">
-                               <p className="text-sm font-bold text-rose-500 font-mono">-{item.discount?.toLocaleString() || 0}</p>
+                               <p className="text-sm font-bold text-rose-500 font-mono">{item.discount?.toLocaleString() || ""}</p>
                             </td>
                             <td className="px-8 py-6 text-right">
                               <p className="text-sm font-black text-slate-900 font-mono">{invoice.invoice.currency} {item.total?.toLocaleString()}</p>
