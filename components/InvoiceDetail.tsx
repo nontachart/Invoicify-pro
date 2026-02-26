@@ -416,13 +416,13 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, onClose, onEdit 
               )}
             </div>
             
-            <div className="bg-indigo-600 text-white p-8 rounded-[2.5rem] shadow-2xl shadow-indigo-200 space-y-4">
+            {/* <div className="bg-indigo-600 text-white p-8 rounded-[2.5rem] shadow-2xl shadow-indigo-200 space-y-4">
                <h5 className="font-black text-sm uppercase tracking-widest">Financial Audit Record</h5>
                <p className="text-xs text-indigo-100 leading-relaxed font-medium">This record has been digitally processed and verified. It is ready for export to your accounting software.</p>
                <button className="w-full py-4 bg-white/10 hover:bg-white/20 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-colors border border-white/10">
                  DOWNLOAD AUDIT LOG
                </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -146,21 +146,28 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="mt-8 text-center text-sm text-slate-500"
           >
-            Don't have an account? <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">Start 14-day free trial</a>
+            {/* Don't have an account? <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">Start 14-day free trial</a> */}
           </motion.p>
         </div>
       </div>
 
       {/* Right Side - Visual/Marketing */}
-      <div className="hidden lg:flex flex-col justify-center bg-slate-900 p-16 relative overflow-hidden">
+      <div className="hidden lg:flex flex-col items-center justify-center p-16 relative overflow-hidden">
         {/* Abstract background elements */}
         <div className="absolute top-0 right-0 w-full h-full opacity-20 pointer-events-none">
           <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-indigo-500 blur-[120px] rounded-full" />
           <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-500 blur-[120px] rounded-full" />
         </div>
 
-        <div className="relative z-10 max-w-lg">
+        <div className="relative z-10">
           <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <img src="/images/zim-logo.png" alt="Login Visual" className="rounded-xl shadow-lg" />
+          </motion.div>
+          {/* <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
@@ -194,9 +201,9 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 </motion.div>
               ))}
             </div>
-          </motion.div>
+          </motion.div> */}
 
-          <motion.div 
+          {/* <motion.div 
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
@@ -212,7 +219,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <p className="text-slate-300 italic">
               "Invoicify Pro saved us over 20 hours a month on admin work. The AI extraction is scarily accurate."
             </p>
-          </motion.div>
+          </motion.div> */}
         </div>
       </div>
     </div>
